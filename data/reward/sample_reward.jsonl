@@ -1,0 +1,16 @@
+{
+    "prompt": "Explain the difference between supervised and unsupervised learning.",
+    "chosen": "In supervised learning, the model learns from labeled data, whereas in unsupervised learning, the model finds patterns in unlabeled data.",
+    "rejected": "In supervised learning, you never use labeled data. In unsupervised learning, you always use labeled data."
+  }
+  {
+    "prompt": "Write a short story about a talking cat.",
+    "chosen": "Once upon a time, a mischievous cat named Whiskers could speak. Each day, he strolled through town, greeting everyone he passed.",
+    "rejected": "TALKING CAT!!! TOTALLY COOL!!!"
+  }
+  {
+    "prompt": "What is the capital of France?",
+    "chosen": "The capital of France is Paris.",
+    "rejected": "London is the capital of France."
+  }
+  

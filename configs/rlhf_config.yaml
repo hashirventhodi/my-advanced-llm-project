@@ -1,0 +1,9 @@
+policy_model_path: "./checkpoints/sft"    # Starting policy
+reward_model_path: "./checkpoints/reward/reward_model.pt"
+save_dir: "./checkpoints/rlhf"
+ppo_batch_size: 2
+ppo_forward_batch_size: 2
+epochs: 2
+block_size: 256
+mixed_precision: "fp16"
+data_path: "./data/sft/sample_sft.jsonl"  # or another dataset used for prompt generation

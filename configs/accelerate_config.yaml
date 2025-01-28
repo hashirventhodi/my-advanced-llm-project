@@ -1,0 +1,6 @@
+# Example accelerate_config.yaml
+compute_environment: LOCAL_MACHINE
+distributed_type: NO
+fp16: true
+machine_rank: 0
+num_processes: 1

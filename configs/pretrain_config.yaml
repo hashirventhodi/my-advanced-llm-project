@@ -1,0 +1,20 @@
+model_name_or_path: "gpt2"          # or any Hugging Face GPT variant
+save_dir: "./checkpoints/pretrain"
+data_dir: "./data/processed"
+train_batch_size: 2
+eval_batch_size: 2
+max_steps: 1000                    # Example for demonstration
+learning_rate: 2e-4
+warmup_steps: 50
+block_size: 256
+gradient_accumulation_steps: 2
+mixed_precision: "fp16"            # "no", "fp16", or "bf16"
+distributed_strategy: "ddp"
+seed: 42
+
+gradient_checkpointing: false
+logging:
+  logging_steps: 10
+  log_dir: "./logs/pretrain"
+  use_wandb: false
+  wandb_project: "MyAdvancedLLM"
