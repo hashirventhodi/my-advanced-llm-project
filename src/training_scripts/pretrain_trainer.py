@@ -1,13 +1,42 @@
 import os
 import torch
+from torch.optim import AdamW  # Changed to PyTorch's AdamW
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, AutoModelForCausalLM, AdamW, get_linear_schedule_with_warmup
+from transformers import AutoTokenizer, AutoModelForCausalLM, get_linear_schedule_with_warmup
 from accelerate import Accelerator
 
 from src.datasets.pretrain_dataset import PretrainDataset
 from src.models.base_model import load_base_model
 from src.utils.config_utils import parse_config
 from src.utils.logging_utils import setup_logging
+from src.utils.training_utils import process_config
+
+
+# def process_config(config):
+#     """Process config values to ensure correct types."""
+#     # Convert string values to appropriate types
+#     type_conversion = {
+#         "learning_rate": float,
+#         "warmup_steps": int,
+#         "max_steps": int,
+#         "train_batch_size": int,
+#         "block_size": int,
+#         "gradient_accumulation_steps": int,
+#         "weight_decay": float,
+#         "max_grad_norm": float,
+#         "save_steps": int,
+#         "num_workers": int
+#     }
+    
+#     processed_config = config.copy()
+#     for key, type_func in type_conversion.items():
+#         if key in processed_config:
+#             try:
+#                 processed_config[key] = type_func(processed_config[key])
+#             except (ValueError, TypeError) as e:
+#                 raise ValueError(f"Error converting {key} to {type_func.__name__}: {e}")
+    
+#     return processed_config
 
 def setup_tokenizer_and_model(config):
     """Setup tokenizer and model with proper padding configuration."""
@@ -29,7 +58,10 @@ def setup_tokenizer_and_model(config):
     return tokenizer, model
 
 def train_pretrain(config_path):
-    config = parse_config(config_path)
+    # Load and process config
+    raw_config = parse_config(config_path)
+    config = process_config(raw_config)
+    
     accelerator = Accelerator(
         mixed_precision=config.get("mixed_precision", "no"),
         gradient_accumulation_steps=config.get("gradient_accumulation_steps", 1)
@@ -40,7 +72,7 @@ def train_pretrain(config_path):
         os.makedirs(config["save_dir"], exist_ok=True)
         os.makedirs(config["logging"]["log_dir"], exist_ok=True)
 
-    # Setup tokenizer and model with proper padding
+    # Setup tokenizer and model
     tokenizer, model = setup_tokenizer_and_model(config)
 
     # Collect data paths
@@ -71,14 +103,14 @@ def train_pretrain(config_path):
     # Setup optimizer and scheduler
     optimizer = AdamW(
         model.parameters(),
-        lr=config["learning_rate"],
-        weight_decay=config.get("weight_decay", 0.0)
+        lr=float(config["learning_rate"]),
+        weight_decay=float(config.get("weight_decay", 0.0))
     )
     
     scheduler = get_linear_schedule_with_warmup(
         optimizer,
-        num_warmup_steps=config["warmup_steps"],
-        num_training_steps=config["max_steps"]
+        num_warmup_steps=int(config["warmup_steps"]),
+        num_training_steps=int(config["max_steps"])
     )
 
     # Prepare for distributed training
@@ -89,7 +121,6 @@ def train_pretrain(config_path):
 
     # Training loop
     global_step = 0
-    best_loss = float('inf')
     
     while global_step < config["max_steps"]:
         for batch in dataloader:
