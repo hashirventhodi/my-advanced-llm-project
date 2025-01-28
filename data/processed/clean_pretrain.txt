@@ -1,0 +1,5 @@
+Artificial intelligence is changing the world.
+The concept of attention mechanisms revolutionized deep learning.
+OpenAI released ChatGPT, a large language model.
+In the future, quantum computing could accelerate AI development.
+Reinforcement learning agents can learn complex tasks from experience.

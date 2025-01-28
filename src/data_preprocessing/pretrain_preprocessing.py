@@ -14,9 +14,11 @@ def preprocess_pretrain(input_file: str, output_file: str):
                 fout.write(cleaned + "\n")
 
 if __name__ == "__main__":
+    import os
+    print("Current Working Directory:", os.getcwd())
     # Minimal usage example
-    raw_file = "../../data/raw/sample_pretrain.txt"
-    processed_file = "../../data/processed/clean_pretrain.txt"
+    raw_file = "data/raw/sample_pretrain.txt"
+    processed_file = "data/processed/clean_pretrain.txt"
     os.makedirs(os.path.dirname(processed_file), exist_ok=True)
     preprocess_pretrain(raw_file, processed_file)
     print(f"Processed {raw_file} -> {processed_file}")
